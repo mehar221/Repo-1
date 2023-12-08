@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            google Books api fetching
+        </title>
+    </head>
+    <body>
+        <h2>
+            API fetching
+        </h2>
+        <button onclick="fetchbook('Javascript')">Fetch the data from API in JSON format</button>
+        <div id="result"></div>
+        <script>
+            function fetchbook(query) {
+                const apiKey = 'API_KEY';
+                const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apiKey}`;
+                fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    displayBooks(data.items);
+                })
+                .catch(error =>{
+                    console.error('Error fetching in data:', error);
+                });
+                function displayBooks(books){
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = '';
+
+                    if(books &&books.length > 0){
+                        books.forEach(book => {
+                            const title = book.volumeInfo.title;
+                            const authors = book.volumeInfo.authors ? book.volumeInfo.authors.join(', '): 'Unknown Author';
+                            
+                            const bookDiv = document.createElement('div');
+                            bookDiv.innerHTML = `<strong>Title:</strong> ${title}<br><strong>Author name:</strong> ${authors}`;
+                            resultDiv.appendChild(bookDiv);
+                        });
+                    }else{
+                        resultDiv.innerHTML = "No books found."
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>
